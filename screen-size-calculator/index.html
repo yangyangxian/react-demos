@@ -8,16 +8,56 @@
       <link href="../libs/css/bulma-cdn.css" rel="stylesheet" type="text/css" />
   </head>
   <body>
-      <style>
-          .red { background-color: red}
-          .green { background-color: green }
-      </style>
+    <style>
+        #main {
+            background-color:whitesmoke;
+            max-width:900px;
+            margin: 0 auto;
+            min-height: 52rem
+        }
+        #content {
+            padding-left: 1rem;
+            padding-right: 1rem;
+            padding-top: 3.2rem;
+            max-width:900px;
+        }
+        #header {
+            max-width:900px;
+            margin: 0 auto
+        }
+        #footer {
+            max-width:900px;
+            margin: 0 auto
+        }
+    </style>
 
-    <section class="section">
-        <div class="container" id="root"></div>
-    </section>
+    <div id="main">
+        <div id="header"></div>
+        
+        <div id="content"></div>
+
+        <div id="footer"></div>
+    </div>
 
     <script type="text/babel">
+
+        class HearSection extends React.Component {
+            render() {
+                return (
+                    <div>
+                        <div class="hero is-primary">
+                            <div class="hero-body">
+                                <div class="has-text-centered">
+                                    <h1 class="title">
+                                        Screen Size Calculator
+                                    </h1>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                );
+            }
+        }
 
         class SreenSizeInput extends React.Component {
             render() {
@@ -56,11 +96,12 @@
             render() {
                 return (
                     <div className="level">
-                        <div className="level-left"></div>
-                        <div className="level-right">
+                        <div className="level-left">                            
                             <div className="level-item">
-                                <a className="button is-primary">Primary</a>
+                                <a className="button is-primary">Calculate</a>
                             </div>
+                        </div>
+                        <div className="level-right">
                         </div>    
                     </div>
                 );
@@ -80,14 +121,14 @@
 
         class ResultText extends React.Component {
             render() {
-                var style = { paddingTop :3 + 'px' };
+                var spanStyle = { marginRight : 20 + 'px' };
 
                 return (
                     <div className="level">
                         <div className="level-item has-text-centered">
                             <div>
-                                <span><label className="label">Width : <span>0</span></label></span>
-                                <span><label className="label">Height : <span>0</span></label></span>
+                                <span style={ spanStyle }><strong>Width : </strong><span id="widthResult">0</span> cm</span>
+                                <span><strong>Height : </strong><span id="heightResult">0</span> cm</span>
                             </div>
                         </div>
                     </div>
@@ -113,12 +154,12 @@
                 return (
                     <div>
                         <div className="columns">
-                            <div className="column is-4">
+                            <div className="column is-5">
                                 <SreenSizeInput />
                                 <ScreenSizeRatioInput />
                                 <CalculateButton />
                             </div>
-                            <div className="column is-8">
+                            <div className="column is-7">
                                 <ResultContainer />
                             </div>
                         </div>
@@ -127,9 +168,33 @@
             }
         }
 
+        class FooterSection extends React.Component {
+            render() {
+                return (
+                    <footer class="footer">
+                        <div class="content has-text-centered">
+                            <p>
+                            <strong>A Work</strong> by <a href="https://github.com/yangyangxian">Yang Yang</a>. CSS style powered by <a href="https://bulma.io/">Bulma</a>
+                            </p>
+                        </div>
+                    </footer>
+                );
+            }
+        }
+
+        ReactDOM.render(
+            <HearSection />,
+            document.getElementById('header')
+        );
+
         ReactDOM.render(
             <CalculatorContainer />,
-            document.getElementById('root')
+            document.getElementById('content')
+        );
+
+        ReactDOM.render(
+            <FooterSection />,
+            document.getElementById('footer')
         );
 
     </script>
