@@ -8,6 +8,11 @@
       <link href="../libs/css/bulma-cdn.css" rel="stylesheet" type="text/css" />
   </head>
   <body>
+      <style>
+          .red { background-color: red}
+          .green { background-color: green }
+      </style>
+
     <section class="section">
         <div class="container" id="root"></div>
     </section>
@@ -17,14 +22,10 @@
         class SreenSizeInput extends React.Component {
             render() {
                 return (
-                    <div className="columns">
+                    <div className="columns is-gapless">
                         <div className="colume">
-                            <div className="field">
-                                <label className="label">The Screen Size:</label>
-                                <div className="control">
-                                    <input className="input" type="text" placeholder="Input the size in inch" />
-                                </div>
-                            </div>
+                            <label className="label">The Screen Size:</label>
+                            <input className="input" type="text" placeholder="Input the size in inch" />
                         </div>
                     </div>
                 );
@@ -34,19 +35,15 @@
         class ScreenSizeRatioInput extends React.Component {
             render() {
                 return (
-                    <div className="columns">
+                    <div className="columns is-gapless">
                         <div className="column">
-                            <div className="field">
-                                <label className="label">The Screen Size Ratio:</label>
-                                <div className="control">
-                                    <div className="columns">
-                                        <div className="column">
-                                            <input className="input" type="text" placeholder="Width" />
-                                        </div>
-                                        <div className="column">
-                                            <input className="input" type="text" placeholder="Height" />
-                                        </div>
-                                    </div>
+                            <label className="label">The Screen Size Ratio:</label>                      
+                            <div className="columns">
+                                <div className="column">                                  
+                                    <input className="input" type="text" placeholder="Width" />
+                                </div>
+                                <div className="column">
+                                    <input className="input" type="text" placeholder="Height" />
                                 </div>
                             </div>
                         </div>
@@ -55,25 +52,57 @@
             }
         }
 
-        class WidthAndHeightResult extends React.Component {
+        class CalculateButton extends React.Component {
             render() {
                 return (
-                    <div className="columns">
-                        <div className="column">
-                            <div className="field">
-                                <label className="label">The width and height in meter:</label>
-                                <div className="control">
-                                    <div className="columns">
-                                        <div className="column">
-                                            <p><strong>Width:</strong> 0</p>
-                                        </div>
-                                        <div className="column">
-                                            <p><strong>Height:</strong> 0</p>
-                                        </div>
-                                    </div>
-                                </div>
+                    <div className="level">
+                        <div className="level-left"></div>
+                        <div className="level-right">
+                            <div className="level-item">
+                                <a className="button is-primary">Primary</a>
+                            </div>
+                        </div>    
+                    </div>
+                );
+            }
+        }
+
+        class Chart extends React.Component {
+            render() {
+                var chartStyle = { height : 218 + 'px' };
+
+                return (
+                    <div className="box" style={ chartStyle }>
+                    </div>
+                );
+            }
+        }
+
+        class ResultText extends React.Component {
+            render() {
+                var style = { paddingTop :3 + 'px' };
+
+                return (
+                    <div className="level">
+                        <div className="level-item has-text-centered">
+                            <div>
+                                <span><label className="label">Width : <span>0</span></label></span>
+                                <span><label className="label">Height : <span>0</span></label></span>
                             </div>
                         </div>
+                    </div>
+                );
+            }
+        }
+
+        class ResultContainer extends React.Component {
+            render() {
+                var containerHeight = { height : 218 + 'px' };
+
+                return (
+                    <div>
+                        <Chart />
+                        <ResultText />
                     </div>
                 );
             }
@@ -82,14 +111,15 @@
         class CalculatorContainer extends React.Component {
             render() {
                 return (
-                    <div className="columns">
-                        <div className="column is-4">
-                            <SreenSizeInput />
-                            <ScreenSizeRatioInput />
-                            <WidthAndHeightResult />
-                        </div>
-                        <div className="column is-8">
-                            <div class="box">
+                    <div>
+                        <div className="columns">
+                            <div className="column is-4">
+                                <SreenSizeInput />
+                                <ScreenSizeRatioInput />
+                                <CalculateButton />
+                            </div>
+                            <div className="column is-8">
+                                <ResultContainer />
                             </div>
                         </div>
                     </div>
