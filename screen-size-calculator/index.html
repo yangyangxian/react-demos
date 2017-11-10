@@ -9,21 +9,24 @@
   </head>
   <body>
     <style>
+        html,body { height:100%; }
         #main {
             background-color:whitesmoke;
-            max-width:900px;
+            max-width: 900px;
             margin: 0 auto;
-            min-height:100%;
+            min-height: 100%;
+            position: relative
         }
         #content {
-            padding-left: 1rem;
-            padding-right: 1rem;
+            padding-left: 1.5rem;
+            padding-right: 1.5rem;
             padding-top: 3.2rem;
         }
         #footer {
-            margin-top: 3rem
+            position: absolute;
+            bottom: 0;
+            width: 100%;
         }
-        html,body { height:100%; }
     </style>
 
     <html>
@@ -107,7 +110,7 @@
 
         class Chart extends React.Component {
             render() {
-                var chartStyle = { height : 218 + 'px' };
+                var chartStyle = { height : 13.6 + 'rem' };
 
                 return (
                     <div className="box" style={ chartStyle }>
@@ -118,7 +121,7 @@
 
         class ResultText extends React.Component {
             render() {
-                var spanStyle = { marginRight : 20 + 'px' };
+                var spanStyle = { marginRight : 1.4 + 'rem' };
 
                 return (
                     <div className="level">
@@ -135,8 +138,6 @@
 
         class ResultContainer extends React.Component {
             render() {
-                var containerHeight = { height : 218 + 'px' };
-
                 return (
                     <div>
                         <Chart />
@@ -167,9 +168,10 @@
 
         class FooterSection extends React.Component {
             render() {
+                var style = {paddingTop: 1.5 + 'rem', paddingBottom: 1.5 + 'rem'};
                 return (
-                    <footer class="footer">
-                        <div class="content has-text-centered">
+                    <footer className="footer" style = { style }>
+                        <div className="content has-text-centered">
                             <p>
                             <strong>A Work</strong> by <a href="https://github.com/yangyangxian">Yang Yang</a>. CSS style powered by <a href="https://bulma.io/">Bulma</a>
                             </p>
