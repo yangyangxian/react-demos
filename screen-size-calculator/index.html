@@ -13,31 +13,28 @@
             background-color:whitesmoke;
             max-width:900px;
             margin: 0 auto;
-            min-height: 52rem
+            min-height:100%;
         }
         #content {
             padding-left: 1rem;
             padding-right: 1rem;
             padding-top: 3.2rem;
-            max-width:900px;
-        }
-        #header {
-            max-width:900px;
-            margin: 0 auto
         }
         #footer {
-            max-width:900px;
-            margin: 0 auto
+            margin-top: 3rem
         }
+        html,body { height:100%; }
     </style>
 
-    <div id="main">
-        <div id="header"></div>
-        
-        <div id="content"></div>
+    <html>
+        <div id="main">
+            <div id="header"></div>
+            
+            <div id="content"></div>
 
-        <div id="footer"></div>
-    </div>
+            <div id="footer"></div>
+        </div>
+    </html>     
 
     <script type="text/babel">
 
@@ -45,10 +42,10 @@
             render() {
                 return (
                     <div>
-                        <div class="hero is-primary">
-                            <div class="hero-body">
-                                <div class="has-text-centered">
-                                    <h1 class="title">
+                        <div className="hero is-primary">
+                            <div className="hero-body">
+                                <div className="has-text-centered">
+                                    <h1 className="title">
                                         Screen Size Calculator
                                     </h1>
                                 </div>
