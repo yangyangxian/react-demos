@@ -8,8 +8,16 @@
     <div id="root"></div>
 
     <script type="text/babel">
+      class Hello extends React.Component {
+        render() {
+          return (
+            <h1>Hello, world!</h1>
+          );
+        }
+      }
+
       ReactDOM.render(
-        <h1>Hello, world!</h1>,
+        <Hello />,
         document.getElementById('root')
       );
     </script>
