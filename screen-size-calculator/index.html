@@ -142,7 +142,7 @@
 
         class Chart extends React.Component {
             render() {
-                var chartStyle = { height : 13.6 + 'rem' };
+                const chartStyle = { height : 13.6 + 'rem' };
 
                 return (
                     <div className="box" style={ chartStyle }>
@@ -153,14 +153,15 @@
 
         class ResultText extends React.Component {
             render() {
-                var spanStyle = { marginRight : 1.4 + 'rem' };
-
+                const spanStyle = { marginRight : 1.4 + 'rem' };
+                const width = this.props.width;
+                const height = this.props.height;
                 return (
                     <div className="level">
                         <div className="level-item has-text-centered">
                             <div>
-                                <span style={ spanStyle }><strong>Width : </strong><span id="widthResult">0</span> cm</span>
-                                <span><strong>Height : </strong><span id="heightResult">0</span> cm</span>
+                                <span style={ spanStyle }><strong>Width : </strong><span id="widthResult">{width}</span> cm</span>
+                                <span><strong>Height : </strong><span id="heightResult">{height}</span> cm</span>
                             </div>
                         </div>
                     </div>
@@ -169,11 +170,36 @@
         }
 
         class ResultContainer extends React.Component {
+            calculate(screenSize, widthRatio, heightRatio) {
+                const size = screenSize;
+                const ratio =  widthRatio / heightRatio;
+                const height = Math.sqrt((screenSize * screenSize)/(1 + ratio*ratio));
+                const width = height * ratio;
+
+                return {width:width, height:height}
+            }
+
+            inchToMeter(value) {
+                return value * 2.54;
+            }
+
             render() {
+                const screenSize = this.props.screenSize;
+                const widthRatio = this.props.widthRatio;
+                const heightRatio = this.props.heightRatio;
+                let width = 0;
+                let height = 0;
+
+                if(screenSize != null && widthRatio != null && heightRatio != null) {
+                    const result = this.calculate(screenSize, widthRatio, heightRatio);
+                    width = this.inchToMeter(result.width).toFixed(2);
+                    height = this.inchToMeter(result.height).toFixed(2);
+                }
+
                 return (
                     <div>
-                        <Chart />
-                        <ResultText />
+                        <Chart width={width} height={height} />
+                        <ResultText width={width} height={height} />
                     </div>
                 );
             }
@@ -204,14 +230,13 @@
             }
 
             handleCalculate(id) {
-                this.props.onClickCalculate(this.state.screenSize, this.state.widthRatio, this.state.heightRatio);              
+                this.props.onClickCalculate(id, this.state.screenSize, this.state.widthRatio, this.state.heightRatio);              
             }
 
             render() {
                 const screenSize = this.state.screenSize;
                 const widthRatio = this.state.widthRatio;
                 const heightRatio = this.state.heightRatio;
-                console.log("screenSize:" + screenSize + ",widthRatio:" + widthRatio + ",heightRatio:" + heightRatio);
 
                 return (
                     <div>
@@ -226,11 +251,17 @@
         class CalculatorContainer extends React.Component {
             constructor(props) {
                 super(props);
+                this.state = {calculateCount: 0};
                 this.plotChart = this.plotChart.bind(this);
             }
 
-            plotChart(screenSize, widthRatio, heightRatio) {
-                //alert(id + "has been clicked! But how to update the chart??");              
+            plotChart(id, screenSize, widthRatio, heightRatio) {
+                ReactDOM.render(
+                    <ResultContainer screenSize={screenSize} 
+                                     widthRatio={widthRatio} 
+                                     heightRatio={heightRatio}/>,
+                    document.getElementById('chartDiv')
+                );
             }
 
             render() {
@@ -240,10 +271,8 @@
                             <div className="column is-5">
                                 <InputContainer onClickCalculate={this.plotChart}/>
                             </div>
-                            <div className="column is-7">
-                                <ResultContainer screenSize={parseFloat(screenSize)}
-                                                widthRatio={parseFloat(widthRatio)}
-                                                heightRatio={parseFloat(heightRatio)}/>
+                            <div id="chartDiv" className="column is-7">
+                                <ResultContainer />
                             </div>
                         </div>
                     </div>
