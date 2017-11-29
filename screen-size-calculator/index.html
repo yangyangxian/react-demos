@@ -5,6 +5,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1">
       <script src="../libs/js/react-libs-cdn.js"></script>
+      <script src="../libs/js/d3/d3.js"></script>
       <link href="../libs/css/bulma-cdn.css" rel="stylesheet" type="text/css" />
   </head>
   <body>
@@ -161,6 +162,55 @@
             }
         }
 
+        class D3Chart extends React.Component {
+            componentDidMount() {
+                this.DrawChart();
+            }
+
+            componentDidUpdate() {
+                this.ClearChart();
+                this.DrawChart(); //one question is that why componentDidMount is called when we click the button for the first time whereas componentDidUpdate is called afterwards
+            }
+
+            componentWillUnmount() {
+                this.ClearChart();
+            }
+
+            ClearChart() {
+                let el = ReactDOM.findDOMNode(this);
+                d3.select(el).select("svg").remove(); 
+            }
+
+            DrawChart() {
+                const width = this.props.width;
+                const height = this.props.height;
+
+                let el = ReactDOM.findDOMNode(this);
+
+                let svgContainer = d3.select(el).append("svg")
+                                                .attr("width", "100%")
+                                                .attr("height", "100%");
+
+                let widthStyle = 10;
+                let heightStyle = widthStyle * height / width;
+
+                let rectangle = svgContainer.append("rect")
+                                            .attr("x", "1rem")
+                                            .attr("y", "1rem")
+                                            .attr("width", widthStyle + "rem")
+                                            .attr("height", heightStyle + "rem")
+                                            .attr("style", "fill: #eeeeee; stroke-width: 3; stroke: #111111; opacity: 0.5");
+            }
+
+            render() {
+                const chartStyle = { height : 13.6 + 'rem' };
+
+                return (
+                    <div className="box" style={ chartStyle }></div>
+                )
+            }
+        }
+
         class ResultText extends React.Component {
             render() {
                 const spanStyle = { marginRight : 1.4 + 'rem' };
@@ -208,7 +258,7 @@
 
                 return (
                     <div>
-                        <Chart width={width} height={height} />
+                        <D3Chart width={width} height={height} />
                         <ResultText width={width} height={height} />
                     </div>
                 );
