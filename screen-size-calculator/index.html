@@ -181,25 +181,106 @@
                 d3.select(el).select("svg").remove(); 
             }
 
-            DrawChart() {
-                const width = this.props.width;
-                const height = this.props.height;
+            GetNormalSize() {
+                let normalScreenSizeDic = new Map();
+                normalScreenSizeDic.set(3.5, {size: 3.5, name:"iPhone 4", widthRatio: 3,heightRatio: 2 });
+                normalScreenSizeDic.set(4, {size: 4, name:"iPhone 5", widthRatio: 16,heightRatio: 9 });
+                normalScreenSizeDic.set(5.0, {size: 5.0, name:"Xiao Mi 4c", widthRatio: 16,heightRatio: 9 });
+                normalScreenSizeDic.set(4.7, {size: 4.7, name:"iPhone 6", widthRatio: 16,heightRatio: 9 });
+                normalScreenSizeDic.set(5.5, {size: 5.5, name:"iPhone 8Plus", widthRatio: 16,heightRatio: 9 });
+                normalScreenSizeDic.set(5.8, {size: 5.8, name:"iPhone X", widthRatio: 19.45,heightRatio: 9 });
+                normalScreenSizeDic.set(6.4, {size: 6.4, name:"Xiao Mi Max1", widthRatio: 16,heightRatio: 9 });
+                normalScreenSizeDic.set(7.9, {size: 7.9, name:"iPad mini", widthRatio: 4,heightRatio: 3 });
+                normalScreenSizeDic.set(9.7, {size: 9.7, name:"iPad", widthRatio: 4,heightRatio: 3 });
+                normalScreenSizeDic.set(10.5, {size: 10.5, name:"iPad Pro", widthRatio: 4, heightRatio: 3});
 
-                let el = ReactDOM.findDOMNode(this);
+                normalScreenSizeDic.set(17, {size: 17, name:"", widthRatio: 4,heightRatio: 3 });
+                normalScreenSizeDic.set(19, {size: 19, name:"", widthRatio: 16,heightRatio: 9 });
+                normalScreenSizeDic.set(21, {size: 21, name:"", widthRatio: 16,heightRatio: 9 });
+                normalScreenSizeDic.set(23, {size: 23, name:"", widthRatio: 16,heightRatio: 9 });
+                normalScreenSizeDic.set(24, {size: 24, name:"", widthRatio: 16,heightRatio: 9 });
+                normalScreenSizeDic.set(25, {size: 25, name:"", widthRatio: 16,heightRatio: 9 });
+                normalScreenSizeDic.set(27, {size: 27, name:"", widthRatio: 16,heightRatio: 9 });
+                normalScreenSizeDic.set(29, {size: 29, name:"", widthRatio: 21,heightRatio: 9 });
+                normalScreenSizeDic.set(32, {size: 32, name:"", widthRatio: 16,heightRatio: 9 });
+                normalScreenSizeDic.set(34, {size: 34, name:"", widthRatio: 21, heightRatio: 9});
 
-                let svgContainer = d3.select(el).append("svg")
-                                                .attr("width", "100%")
-                                                .attr("height", "100%");
+                normalScreenSizeDic.set(40, {size: 40, name:"", widthRatio: 16,heightRatio: 9 });
+                normalScreenSizeDic.set(50, {size: 50, name:"", widthRatio: 16,heightRatio: 9 });
+                normalScreenSizeDic.set(55, {size: 55, name:"", widthRatio: 16,heightRatio: 9 });
+                normalScreenSizeDic.set(60, {size: 60, name:"", widthRatio: 16,heightRatio: 9 });
+                normalScreenSizeDic.set(65, {size: 65, name:"", widthRatio: 16,heightRatio: 9 });
+                normalScreenSizeDic.set(75, {size: 70, name:"", widthRatio: 16,heightRatio: 9 });
+                normalScreenSizeDic.set(86, {size: 80, name:"", widthRatio: 16,heightRatio: 9 });
+                normalScreenSizeDic.set(100, {size: 100, name:"", widthRatio: 16,heightRatio: 9 });
+                normalScreenSizeDic.set(120, {size: 120, name:"", widthRatio: 16,heightRatio: 9 });
 
-                let widthStyle = 10;
-                let heightStyle = widthStyle * height / width;
+                return normalScreenSizeDic;
+            }
+
+            sortNumber(a,b)
+            { 
+                return a - b
+            }
+
+            AppendRect(svgContainer, data) {
+                console.log(data);
+                let widthStyle = 1 * data.size;
+                let heightStyle = widthStyle * (data.heightRatio / data.widthRatio);
 
                 let rectangle = svgContainer.append("rect")
-                                            .attr("x", "1rem")
-                                            .attr("y", "1rem")
+                                            .attr("x", "0.5rem")
+                                            .attr("y", "0.5rem")
                                             .attr("width", widthStyle + "rem")
                                             .attr("height", heightStyle + "rem")
-                                            .attr("style", "fill: #eeeeee; stroke-width: 3; stroke: #111111; opacity: 0.5");
+                                            .attr("style", "fill: #eeeeee; stroke-width: 3; stroke: #111111; opacity: 0.7; postion:absolute");
+            }
+
+            DrawChart() {
+                const screenSize = this.props.screenSize;
+                const width = parseFloat(this.props.width);
+                const height = parseFloat(this.props.height);
+                if(screenSize == null || width == null || height == null) {
+                    return;
+                }
+
+                let normalScreenSizeDic = this.GetNormalSize();
+                let sizeKeys = new Array();
+                for (var [key, value] of normalScreenSizeDic) {
+                    sizeKeys.push(key);
+                }
+                sizeKeys.sort(this.sortNumber);
+
+                let currentSizeIndex = sizeKeys.indexOf(screenSize);
+
+                let dataList = new Array();
+                dataList.push({size: screenSize, name:"", widthRatio: width, heightRatio: height });
+                if(currentSizeIndex+1 < sizeKeys.length)
+                {
+                    dataList.push(normalScreenSizeDic.get(sizeKeys[currentSizeIndex+1]));
+                }
+                if(currentSizeIndex+2 < sizeKeys.length)
+                {
+                    dataList.push(normalScreenSizeDic.get(sizeKeys[currentSizeIndex+2]));
+                }
+                if(currentSizeIndex-1 >= 0)
+                {
+                    dataList.push(normalScreenSizeDic.get(sizeKeys[currentSizeIndex-1]));
+                }
+                if(currentSizeIndex-2 >= 0)
+                {
+                    dataList.push(normalScreenSizeDic.get(sizeKeys[currentSizeIndex-2]));
+                }
+
+                let el = ReactDOM.findDOMNode(this);
+                let svgContainer = d3.select(el).append("svg")
+                                                .attr("width", "100%")
+                                                .attr("height", "100%")
+                                                .attr("style", "position:relative");
+
+                for (var data of dataList) {
+                    this.AppendRect(svgContainer, data);
+                }
             }
 
             render() {
@@ -258,7 +339,7 @@
 
                 return (
                     <div>
-                        <D3Chart width={width} height={height} />
+                        <D3Chart screenSize={screenSize} width={widthRatio} height={heightRatio} />
                         <ResultText width={width} height={height} />
                     </div>
                 );
