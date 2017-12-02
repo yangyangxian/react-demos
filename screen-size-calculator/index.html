@@ -150,7 +150,7 @@
 
                 let widthStyle = 10;
                 let heightStyle = widthStyle * height / width;
-                const rectStyle = { width : widthStyle + 'rem',height : heightStyle + 'rem', fill : '#eeeeee', strokeWidth:3, stroke:'#111111', opacity:0.5 };
+                const rectStyle = { width : widthStyle + 'rem',height : heightStyle + 'rem', fill : '#eeeeee', strokeWidth:3, stroke:'#111111', opacity:0.2 };
                 //const rect2Style = { width : widthStyle * 1.2 + 'rem',height : heightStyle * 1.2 + 'rem', fill : '#eeeeee', strokeWidth:3, stroke:'#111111', opacity:0.5 };
                 return (
                     <div className="box" style={ chartStyle }>
@@ -223,26 +223,40 @@
                 return a - b
             }
 
-            AppendRect(svgContainer, data) {
-                console.log(data);
-                let widthStyle = 1 * data.size;
-                let heightStyle = widthStyle * (data.heightRatio / data.widthRatio);
+            getClosedIndex(screenSize, sortedSizeKeys) {
+                for(let i = 0; i < sortedSizeKeys.length; i++) {
+                    if(screenSize < sortedSizeKeys[i]) {
+                        if(i == 0 || sortedSizeKeys[i]-screenSize < screenSize-sortedSizeKeys[i-1]) {
+                            return i;
+                        } else {
+                            return i-1;
+                        }
+                    }
+                }
+                return sortedSizeKeys.length-1;
+            }
 
+            AppendRect(svgContainer, height, width) {
+
+                //let widthStyle = 1 * data.size;
+                //let heightStyle = widthStyle * (data.heightRatio / data.widthRatio);
+                console.log("height" + height + "width:" + width);
                 let rectangle = svgContainer.append("rect")
-                                            .attr("x", "0.5rem")
-                                            .attr("y", "0.5rem")
-                                            .attr("width", widthStyle + "rem")
-                                            .attr("height", heightStyle + "rem")
-                                            .attr("style", "fill: #eeeeee; stroke-width: 3; stroke: #111111; opacity: 0.7; postion:absolute");
+                                            .attr("x", "4px")
+                                            .attr("y", "4px")
+                                            .attr("width", width + "px")
+                                            .attr("height", height + "px")
+                                            .attr("style", "fill: #ffffff; stroke-width: 3; stroke: #111111; opacity: 0.7; postion:absolute");
             }
 
             DrawChart() {
-                const screenSize = this.props.screenSize;
-                const width = parseFloat(this.props.width);
-                const height = parseFloat(this.props.height);
-                if(screenSize == null || width == null || height == null) {
+                if(this.props.screenSize == null || this.props.width == null || this.props.height == null
+                || this.props.screenSize == 0 || this.props.width == 0 || this.props.height == 0) {
                     return;
                 }
+                const screenSize = parseFloat(this.props.screenSize);
+                const width = parseFloat(this.props.width);
+                const height = parseFloat(this.props.height);
 
                 let normalScreenSizeDic = this.GetNormalSize();
                 let sizeKeys = new Array();
@@ -251,18 +265,19 @@
                 }
                 sizeKeys.sort(this.sortNumber);
 
-                let currentSizeIndex = sizeKeys.indexOf(screenSize);
+                let currentSizeIndex = sizeKeys.indexOf(screenSize) >= 0 ? sizeKeys.indexOf(screenSize) : this.getClosedIndex(screenSize, sizeKeys);
 
                 let dataList = new Array();
-                dataList.push({size: screenSize, name:"", widthRatio: width, heightRatio: height });
-                if(currentSizeIndex+1 < sizeKeys.length)
-                {
-                    dataList.push(normalScreenSizeDic.get(sizeKeys[currentSizeIndex+1]));
-                }
+
                 if(currentSizeIndex+2 < sizeKeys.length)
                 {
                     dataList.push(normalScreenSizeDic.get(sizeKeys[currentSizeIndex+2]));
                 }
+                if(currentSizeIndex+1 < sizeKeys.length)
+                {
+                    dataList.push(normalScreenSizeDic.get(sizeKeys[currentSizeIndex+1]));
+                }
+                dataList.push({size: screenSize, name:"", widthRatio: width, heightRatio: height });
                 if(currentSizeIndex-1 >= 0)
                 {
                     dataList.push(normalScreenSizeDic.get(sizeKeys[currentSizeIndex-1]));
@@ -274,12 +289,24 @@
 
                 let el = ReactDOM.findDOMNode(this);
                 let svgContainer = d3.select(el).append("svg")
+                                                .attr("id", "svgChart")
                                                 .attr("width", "100%")
                                                 .attr("height", "100%")
                                                 .attr("style", "position:relative");
+                let style = window.getComputedStyle(document.querySelectorAll("#svgChart")[0], null)
+
+                let biggestSize = dataList[0].size;
 
                 for (var data of dataList) {
-                    this.AppendRect(svgContainer, data);
+                    console.log(data.size)
+                    const ratio = data.widthRatio / data.heightRatio;
+                    const height = Math.sqrt((screenSize * screenSize)/(1 + ratio*ratio));
+                    const width = height * ratio;
+
+                    let heightInPX = parseFloat(style.height) * 0.95 * (Math.sqrt((data.size * data.size)/(1 + ratio*ratio)) / Math.sqrt((biggestSize * biggestSize)/(1 + ratio*ratio)) );
+                    let widthInPX = heightInPX * (data.widthRatio / data.heightRatio);
+
+                    this.AppendRect(svgContainer, heightInPX, widthInPX);
                 }
             }
 
