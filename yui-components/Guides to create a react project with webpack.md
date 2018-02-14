@@ -221,8 +221,184 @@ This means that webpack read `./src/app.js` as source file and output `./dist/ap
        <title>Hello World</title>
    </head>
    <body>
+     	<p>hello world</p>
    </body>
    </html>
    ```
 
+
+### Create a css file
+
+1. Create a css file `.src/app.css` and add:
+
+```css
+body {
+  background: purple;
+}
+```
+
+​	Modify the `src/app.js`:
+
+```javascript
+import css from './app.css';
+
+console.log("hello world")
+```
+
+2. Now if you run `webpack`, error occurs cause nodejs is a javascript runtime environment which can not read css file.
+
+   So we need to install a css loader:
+
+```
+npm install --save-dev css-loader style-loader
+```
+
+​	The loader will pre-process the file 
+
+3. Then use `webpack` or `npm run dev` to compile.
+4. Now the css file content will be pushed into the `app.bundle.js`. Open the `index.html` to check out the style change.
+
+### Use scss file
+
+1. Create a scss file `.src/app.scss` and add:
+
+  ```scss
+  body {
+    p {
+      color: red;
+    }
+  }
+  ```
+
+2. Modify the `src/app.js`:
+
+  ```javascript
+  import css from './app.css';
+  import css from './app.scss';
+
+  console.log("Hello,world")
+  ```
+
+
+3. Install scss file loader:
+
+  ```
+  npm install sass-loader node-sass --save-dev
+  ```
+
+4. Modify the config:
+
+   ```javascript
+   module: {
+     rules: [
+       {
+         test: /\.css$/,
+         use: [ 'style-loader', 'css-loader' ]
+       },
+       {
+         test: /\.scss$/,
+         use: [ 'style-loader', 'css-loader', 'sass-loader' ]
+       }
+     ]
+   }
+   ```
+
+   Compile and check out the result.
+
+
+### Extract css from js file
+
+Now the css code is in the `app.bundle.js` file. But convetionally we want css to be a seperate file.
+
+1. Install the plugin:
+
+   ```
+   npm install --save-dev extract-text-webpack-plugin
+   ```
+
+2. Modify the `webpack.config.js`
+
+   ```javascript
+   var HtmlWebpackPlugin = require('html-webpack-plugin');
+   const ExtractTextPlugin = require('extract-text-webpack-plugin');
+
+   module.exports = {
+       entry: './src/app.js',
+       output: {
+           path: __dirname + '/dist',
+           filename: 'app.bundle.js'
+       },
+       plugins: [new HtmlWebpackPlugin({
+           template: './src/index.html',
+           filename: 'index.html'
+           }),
+           new ExtractTextPlugin('style.css')
+       ],
+       module: {
+           rules: [
+               {
+                   test: /\.css$/,
+                   use: [ 'style-loader', 'css-loader' ]
+               },
+               {
+                   test: /\.scss$/,
+                   use: ExtractTextPlugin.extract({
+                     fallback: 'style-loader',
+                     //resolve-url-loader may be chained before sass-loader if necessary
+                     use: ['css-loader', 'sass-loader']
+                   })
+               }
+           ]
+       }
+   };
+   ```
+
+3. Compile the project. The `dist/style.css` has been generated.
+
+### Use webpack-dev-server
+
+We use the server to compile our file and open browser automatically.
+
+1. Install the `webpack-dev-server`:
+
+   ```
+   npm install -g webpack-dev-server
+   npm install --save-dev webpack-dev-server
+   ```
+
+2. Modify the `webpack.config.js`:
+
+   ```javascript
+   module.exports = {
+     entry: './src/app.js',
+     ...
+     devServer: {
+       port: 3000,
+     	open: true
+     },
+     ...
+   };
+   ```
+
+   `open: true` means that after compilation, the server will open the browser automatically.
+
+3. Run the command:
+
+   ```
+   webpack-dev-server
+   ```
+
+   Or add this command to `package.json`:
+
+   ```json
+   ...
+   "scripts": {
+     "start": "webpack-dev-server",
+     "dev": "webpack -d",
+     "prod": "webpack -p"
+   },
+   ...
+   ```
+
    ​
+
