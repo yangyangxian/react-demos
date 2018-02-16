@@ -1,4 +1,10 @@
-import css from './app.css';
 import css from './app.scss';
 
-console.log("Hello,world")
+import React from 'react';
+import ReactDOM from 'react-dom';
+import Root from './Root';
+
+ReactDOM.render(
+  <Root></Root>,
+  document.getElementById('root')
+);

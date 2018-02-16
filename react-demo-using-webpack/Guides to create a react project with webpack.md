@@ -3,15 +3,15 @@
 1. Install node to your computer: [nodejs](https://nodejs.org/zh-cn/).
 2. Create a folder. Go into the folder.
 
-```
-cd C:\Users\Young\Desktop\react-demos\yui-components
-```
+  ```
+  cd C:\Users\Young\Desktop\react-demos\yui-components
+  ```
 
 3. Using the command to create a nodejs project:
 
-```
-npm init
-```
+  ```
+  npm init
+  ```
 
 You can keep clicking `Enter` to skip the initial project settings. Then you will create a `package.json` file under the folder.
 
@@ -400,5 +400,101 @@ We use the server to compile our file and open browser automatically.
    ...
    ```
 
-   ​
 
+
+### Use React
+
+1. Install React:
+
+   ```
+   npm install --save react react-dom
+   ```
+
+2. Install babel which will transform some ES6 code to ES5:
+
+   ```
+   npm install --save-dev babel-core babel-preset-react babel-preset-env
+   ```
+
+   Create file named `.babelrc` under root path.Add the content to the file:
+
+   ```json
+   {
+     "presets": ["env", "react"]
+   }
+   ```
+
+3. Install babel loader:
+
+   ```
+   npm install --save-dev babel-loader
+   ```
+
+   Modify `webpack.config.js`:
+
+   ```javascript
+   ...
+   { test: /\.js$/, loader: 'babel-loader', exclude: /node_modules/ },
+   { test: /\.jsx$/, loader: 'babel-loader', exclude: /node_modules/ }
+   ...
+   ```
+
+4. Write react code:
+
+   `src/index.html`:
+
+   ```html
+   <!DOCTYPE html>
+   <html lang="en">
+   <head>
+       <meta charset="UTF-8">
+       <title>Hello World</title>
+   </head>
+       <div id="root"></div>
+   <body>
+   </body>
+   </html>
+   ```
+
+   `src/app.js`:
+
+   ```javascript
+   import css from './app.scss';
+
+   import React from 'react';
+   import ReactDOM from 'react-dom';
+   import Root from './Root';
+
+   ReactDOM.render(
+     <Root></Root>,
+     document.getElementById('root')
+   );
+   ```
+
+   Add `src/Root.js`:
+
+   ```javascript
+   import React from 'react';
+
+   export default class Root extends React.Component {
+     render() {
+       return (
+         <div style={{textAlign: 'center'}}>
+           <h1>Hello World</h1>
+         </div>);
+     }
+   }
+   ```
+
+   `src/app.scss`:
+
+   ```scss
+   body {
+       background: purple;
+       p {
+         color: red;
+       }
+   }
+   ```
+
+   ### The End

@@ -30,7 +30,9 @@ module.exports = {
                   //resolve-url-loader may be chained before sass-loader if necessary
                   use: ['css-loader', 'sass-loader']
                 })
-            }
+            },
+            { test: /\.js$/, loader: 'babel-loader', exclude: /node_modules/ },
+            { test: /\.jsx$/, loader: 'babel-loader', exclude: /node_modules/ }
         ]
     }
 };
