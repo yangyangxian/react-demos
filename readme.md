@@ -6,9 +6,12 @@
 
 浏览器打开html文件即可。
 
-### screen-size-calculator-redux
-此demo功能与**screen-size-calculator**相同，只是代码中增加使用了redux。
+### react-demo-using-webpack
 
-为实现模块化js（为的是文件结构匹配redux逻辑结构），使用了webpack打包，所有包的依赖通过npm管理。
+这个demo是最基本配置了webpack的react的hello，world项目，引用了scss，css，babel等等加载器。
 
-浏览器打开html/index.html即可。
+1. Download本demo
+
+
+2. ```npm install```
+3. 开始写react项目吧。
