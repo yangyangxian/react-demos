@@ -1,10 +1,11 @@
-import css from './app.scss';
-
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Root from './Root';
+import Root from './root/root';
+import { BrowserRouter } from 'react-router-dom'
 
 ReactDOM.render(
-  <Root></Root>,
+  <BrowserRouter>
+    <Root></Root>
+  </BrowserRouter>,
   document.getElementById('root')
 );
