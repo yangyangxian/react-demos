@@ -10,8 +10,15 @@
 
 这个demo是最基本配置了webpack的react的hello，world项目，引用了scss，css，babel等等加载器。
 
+### react-router-demo
+
+安装react-router-dom.
+
+必须运行在服务器下
+```
+npm run start
+```
+
 1. Download本demo
-
-
 2. ```npm install```
 3. 开始写react项目吧。
